@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:12.4
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - /data/docker-data/recording-app_db-data/_data:/var/lib/postgresql/data
+  app:
+    build:
+      context: .
+    volumes:
+      - /data/docker-data/recording-app_static_data/_data:/vol/web
+    environment:
+      - SECRET_KEY=r8s-#64+0=f)y-(9_3zhrrqb^h4r5-sovf7jxbz(0^yy^ttole
+      - ALLOWED_HOSTS=127.0.0.1,localhost,31.171.108.97,dc.mymedia.az
+      - DEBUG=0
+      - EMAIL_PAGE_DOMAIN=dc.mymedia.az
+      - CAPTCHA_PUBLIC_KEY=6LdwYMIZAAAAAOeHmtHex_jiJXa-XKaNr8mOTOPG
+      - CAPTCHA_PRIVATE_KEY=6LdwYMIZAAAAAB72EzFvxNkIybEPlod2QeD-Vill
+    depends_on:
+      - db
+  proxy:
+     build:
+       context: ./proxy
+     volumes:
+      - /data/docker-data/recording-app_static_data/_data:/vol/static
+      - /data/docker-data/recording-app_ssl_drc/_data:/vol/ssl
+     ports:
+      - "80:80"
+      - "443:443"
+     depends_on:
+      - app
+
+volumes:
+  ssl_drc:

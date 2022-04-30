@@ -1,0 +1,6 @@
+Django==3.0.8
+django-email-verification==0.0.7
+uWSGI>=2.0.18,<2.1
+psycopg2-binary>=2.8,<2.9
+requests
+tinytag
